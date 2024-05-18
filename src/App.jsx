@@ -5,7 +5,7 @@ import { Table } from 'antd'
 function App() {
 	const pageSize = 10;
 	const [currentPage, setCurrentPage] = useState(1);
-	const { data, isLoading, error } = useGetProductsQuery({
+	const { data, isLoading, isFetching, error } = useGetProductsQuery({
 		skip: pageSize * (currentPage - 1),
 		limit: pageSize,
 	});
@@ -17,6 +17,7 @@ function App() {
 			title: 'Title',
 			dataIndex: 'title',
 			key: 'title',
+			ellipsis: true,
 		},
 		{
 			title: 'Description',
@@ -34,15 +35,15 @@ function App() {
 
   return (
 		<Table
-			style={{ width: '100vw' }}
 			dataSource={data?.products}
 			columns={columns}
-			loading={isLoading}
+			loading={isLoading || isFetching}
 			rowKey='id'
 			pagination={{
 				total: totalProducts,
 				current: currentPage,
 				onChange: (page) => setCurrentPage(page),
+				showSizeChanger: false,
 			}}
 		/>
   );
