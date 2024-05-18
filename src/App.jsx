@@ -18,13 +18,13 @@ function App() {
 			dataIndex: 'title',
 			key: 'title',
 			ellipsis: true,
-			width: '15%',
+			width: '20%',
 		},
 		{
 			title: 'Brand',
 			dataIndex: 'brand',
 			key: 'brand',
-			width: '10%',
+			width: '15%',
 		},
 		{
 			title: 'Description',
@@ -62,6 +62,7 @@ function App() {
 			columns={columns}
 			loading={isLoading || isFetching}
 			rowKey='id'
+			size='middle'
 			pagination={{
 				total: totalProducts,
 				current: currentPage,
