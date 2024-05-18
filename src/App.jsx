@@ -3,11 +3,16 @@ import { useGetProductsQuery } from './services/products';
 import { Table } from 'antd'
 
 function App() {
-	const pageSize = 10;
-	const [currentPage, setCurrentPage] = useState(1);
+	const defaultPageSize = 5;
+
+	const [pagination, setPagination] = useState({
+		current: 1,
+		size: defaultPageSize,
+	});
+
 	const { data, isLoading, error } = useGetProductsQuery({
-		skip: pageSize * (currentPage - 1),
-		limit: pageSize,
+		skip: pagination.size * (pagination.current - 1),
+		limit: pagination.size,
 	});
 
 	const totalProducts = data?.total; 
@@ -34,15 +39,16 @@ function App() {
 
   return (
 		<Table
-			style={{ width: '100vw' }}
 			dataSource={data?.products}
 			columns={columns}
 			loading={isLoading}
 			rowKey='id'
 			pagination={{
 				total: totalProducts,
-				current: currentPage,
-				onChange: (page) => setCurrentPage(page),
+				current: pagination.current,
+				defaultPageSize,
+				onChange: (page) => setPagination(prev => ({ ...prev, current: page })),
+				onShowSizeChange: (current, size) => setPagination( prev => ({ ...prev, size, current: 1 }) ),
 			}}
 		/>
   );
