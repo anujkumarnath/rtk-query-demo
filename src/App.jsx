@@ -1,13 +1,18 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useGetProductsQuery } from './services/products';
 import { Rate, Table } from 'antd'
 
 function App() {
-	const pageSize = 10;
-	const [currentPage, setCurrentPage] = useState(1);
+	const defaultPageSize = 5;
+
+	const [pagination, setPagination] = useState({
+		current: 1,
+		size: defaultPageSize,
+	});
+
 	const { data, isLoading, isFetching, error } = useGetProductsQuery({
-		skip: pageSize * (currentPage - 1),
-		limit: pageSize,
+		skip: pagination.size * (pagination.current - 1),
+		limit: pagination.size,
 	});
 
 	const totalProducts = data?.total; 
@@ -37,7 +42,7 @@ function App() {
 			title: 'Rating',
 			dataIndex: 'rating',
 			key: 'rating',
-			render: rating => <Rate allowHalf value={rating}/>,
+			render: rating => <Rate allowHalf disabled value={rating}/>,
 			align: 'center',
 		},
 		{
@@ -56,6 +61,18 @@ function App() {
 		},
 	];
 
+	const onPageChange = (page) => {
+		setPagination(prev => ({ ...prev, current: page }));
+	}
+
+	const onPageSizeChange = (_, size) => {
+		setPagination(prev => ({ ...prev, size }));
+	}
+
+	useEffect(() => {
+		setPagination(prev => ({ ...prev, current: 1 }));
+	}, [pagination.size])
+
   return (
 		<Table
 			dataSource={data?.products}
@@ -64,10 +81,13 @@ function App() {
 			rowKey='id'
 			size='middle'
 			pagination={{
+				defaultPageSize,
 				total: totalProducts,
-				current: currentPage,
-				onChange: (page) => setCurrentPage(page),
-				showSizeChanger: false,
+				current: pagination.current,
+				pageSize: pagination.size,
+				pageSizeOptions: [5, 10, 25, 50, 100],
+				onChange: onPageChange,
+				onShowSizeChange: onPageSizeChange,
 			}}
 		/>
   );
