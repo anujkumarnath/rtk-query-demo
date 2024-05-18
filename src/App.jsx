@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useGetProductsQuery } from './services/products';
-import { Table } from 'antd'
+import { Rate, Table } from 'antd'
 
 function App() {
 	const pageSize = 10;
@@ -18,18 +18,41 @@ function App() {
 			dataIndex: 'title',
 			key: 'title',
 			ellipsis: true,
+			width: '15%',
+		},
+		{
+			title: 'Brand',
+			dataIndex: 'brand',
+			key: 'brand',
+			width: '10%',
 		},
 		{
 			title: 'Description',
 			dataIndex: 'description',
 			key: 'description',
 			ellipsis: true,
+			width: '30%',
+		},
+		{
+			title: 'Rating',
+			dataIndex: 'rating',
+			key: 'rating',
+			render: rating => <Rate allowHalf value={rating}/>,
+			align: 'center',
+		},
+		{
+			title: 'Stock',
+			dataIndex: 'stock',
+			key: 'stock',
+			align: 'right',
+			width: '10%',
 		},
 		{
 			title: 'Price',
 			dataIndex: 'price',
 			key: 'price',
 			align: 'right',
+			width: '10%',
 		},
 	];
 
